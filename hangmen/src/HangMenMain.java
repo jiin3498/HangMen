@@ -4,6 +4,8 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -18,7 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-public class HangMenGame extends JFrame {
+public class HangMenMain extends JFrame {
 	
 	AnswerWord answerWord = new AnswerWord();
 	
@@ -31,7 +33,7 @@ public class HangMenGame extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					HangMenGame frame = new HangMenGame();
+					HangMenMain frame = new HangMenMain();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -43,10 +45,10 @@ public class HangMenGame extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public HangMenGame() {		
+	public HangMenMain() {		
 		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(10, 10, 1200, 800);
+		setBounds(100, 100, 1200, 800);
 		
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
@@ -67,7 +69,18 @@ public class HangMenGame extends JFrame {
 		startButton.setFont(new Font("맑은 고딕", Font.BOLD, 50));
 		startButton.setBackground(new Color(255, 128, 192));
 		startButton.setForeground(new Color(255, 255, 255));
+		startButton.setBorderPainted(false);
+		startButton.setFocusPainted(false);
 		contentPane.add(startButton);
+		
+		startButton.addActionListener(new ActionListener() {			
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Game game = new Game();
+				game.setVisible(true);
+				setVisible(false); // 창 안보이게 하기
+			}
+		});
 		
 		JLabel mainimageLabel = new JLabel();
 		try {
