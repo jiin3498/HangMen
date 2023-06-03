@@ -1,37 +1,42 @@
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.FlowLayout;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
-import java.awt.Font;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import java.awt.FlowLayout;
 
-public class Game extends JFrame {
+public class Game extends JFrame implements ActionListener {
 	
-	public static boolean isanswer = false;
-	public static String answer;
+	private String answer; // 정답 단어
+	private int chance = 6; // 기회는 6
+	private JLabel notionLabel, userWordLabel;
 	
-	private JPanel contentPane;
-	private JTextField usertextField;
+	private JPanel contentPane, icecreamPanel, wordpanel, answerPanel;
+	private JButton[] answerChar;
 	
 	private JToggleButton[] words = new JToggleButton[27];
 	private String[] alphabet = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", 
 								 "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T",
 								 "U", "V", "W", "X", "Y", "Z"};
 	
-	CardLayout cards = new CardLayout();
+	private CardLayout cards = new CardLayout();
+	
+	StringBuilder sb = new StringBuilder();
 	
 	/**
 	 * Launch the application.
@@ -54,9 +59,12 @@ public class Game extends JFrame {
 		AnswerWord word = new AnswerWord();
 		answer = word.getAnswer();
 		
-		// 기본 셋팅
+		System.out.println(answer);
+		
+		// 기본 디자인 셋팅
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1200, 800);
+		setBounds(100, 100, 1200, 600);
+		
 		// 메인 패널
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(255, 255, 255));
@@ -64,16 +72,33 @@ public class Game extends JFrame {
 		getContentPane().add(contentPane);
 		contentPane.setLayout(null);
 		
-		// 맨 위 찬스
-		JLabel chanceLabel = new JLabel("Chance");
-		chanceLabel.setFont(new Font("맑은 고딕", Font.BOLD, 20));
-		chanceLabel.setBounds(23, 10, 78, 26);
-		contentPane.add(chanceLabel);	
+		// 왼쪽 중앙 - 정답 표출 패널
+		answerPanel = new JPanel();
+		answerPanel.setBackground(new Color(255, 255, 255));
+		answerPanel.setBounds(12, 55, 563, 166);
+		answerPanel.setLayout(new FlowLayout());
+		contentPane.add(answerPanel);
+		
+		// 정답인지 아닌지에 따라 라벨 변경
+		notionLabel = new JLabel("영단어를 맞춰보세요!");
+		notionLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+		notionLabel.setBounds(22, 10, 234, 35);
+		contentPane.add(notionLabel);
+		
+		// 정답 수에 맞춰서 버튼이 출력됨
+		answerChar = new JButton[answer.length()];
+		for (int i = 0; i < answer.length(); ++i) {
+			answerChar[i] = new JButton();
+			answerChar[i].setFont(new Font("맑은 고딕", Font.PLAIN, 20));
+			answerChar[i].setBackground(Color.LIGHT_GRAY);
+			answerPanel.add(answerChar[i]);
+		}
+		
 		
 		// 오른쪽 - 아이스크림 사진 패널
-		JPanel icecreamPanel = new JPanel();
+		icecreamPanel = new JPanel();
 		icecreamPanel.setBackground(new Color(255, 255, 255));
-		icecreamPanel.setBounds(587, 92, 580, 590);
+		icecreamPanel.setBounds(587, 60, 580, 480);
 		icecreamPanel.setLayout(cards);
 		contentPane.add(icecreamPanel);
 		
@@ -89,10 +114,6 @@ public class Game extends JFrame {
 		fifth_icecream.setBackground(Color.white);
 		JPanel sixth_icecream = new JPanel();
 		sixth_icecream.setBackground(Color.white);
-		JPanel seventh_icecream = new JPanel();
-		seventh_icecream.setBackground(Color.white);
-		JPanel eighth_icecream = new JPanel();
-		eighth_icecream.setBackground(Color.white);
 		
 		JLabel icecream_1 = new JLabel();
 		JLabel icecream_2 = new JLabel();
@@ -100,18 +121,14 @@ public class Game extends JFrame {
 		JLabel icecream_4 = new JLabel();
 		JLabel icecream_5 = new JLabel();
 		JLabel icecream_6 = new JLabel();
-		JLabel icecream_7 = new JLabel();
-		JLabel icecream_8 = new JLabel();
 		
 		try {
-			icecream_1.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨1.jpg")).getScaledInstance(580, 600, Image.SCALE_AREA_AVERAGING)));
-			icecream_2.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨2.jpg")).getScaledInstance(580, 600, Image.SCALE_AREA_AVERAGING)));
-			icecream_3.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨3.jpg")).getScaledInstance(580, 600, Image.SCALE_AREA_AVERAGING)));
-			icecream_4.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨4.jpg")).getScaledInstance(580, 600, Image.SCALE_AREA_AVERAGING)));
-			icecream_5.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨5.jpg")).getScaledInstance(580, 600, Image.SCALE_AREA_AVERAGING)));
-			icecream_6.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨6.jpg")).getScaledInstance(580, 600, Image.SCALE_AREA_AVERAGING)));
-			icecream_7.setIcon(new ImageIcon(ImageIO.read(new File("image/승리.jpg")).getScaledInstance(580, 600, Image.SCALE_AREA_AVERAGING)));
-			icecream_8.setIcon(new ImageIcon(ImageIO.read(new File("image/패배.jpg")).getScaledInstance(580, 600, Image.SCALE_AREA_AVERAGING)));
+			icecream_1.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨1.jpg")).getScaledInstance(800, 550, Image.SCALE_AREA_AVERAGING)));
+			icecream_2.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨2.jpg")).getScaledInstance(800, 550, Image.SCALE_AREA_AVERAGING)));
+			icecream_3.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨3.jpg")).getScaledInstance(800, 550, Image.SCALE_AREA_AVERAGING)));
+			icecream_4.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨4.jpg")).getScaledInstance(800, 550, Image.SCALE_AREA_AVERAGING)));
+			icecream_5.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨5.jpg")).getScaledInstance(800, 550, Image.SCALE_AREA_AVERAGING)));
+			icecream_6.setIcon(new ImageIcon(ImageIO.read(new File("image/행맨6.jpg")).getScaledInstance(800, 550, Image.SCALE_AREA_AVERAGING)));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -122,67 +139,94 @@ public class Game extends JFrame {
 		fourth_icecream.add(icecream_4);
 		fifth_icecream.add(icecream_5);
 		sixth_icecream.add(icecream_6);
-		seventh_icecream.add(icecream_7);
-		eighth_icecream.add(icecream_8);
 				
 		icecreamPanel.add(first_icecream, "1");
 		icecreamPanel.add(second_icecream, "2");
 		icecreamPanel.add(third_icecream, "3");
 		icecreamPanel.add(fourth_icecream, "4");
 		icecreamPanel.add(fifth_icecream, "5");
-		icecreamPanel.add(sixth_icecream, "6");
-		icecreamPanel.add(seventh_icecream, "7");
-		icecreamPanel.add(eighth_icecream, "8");		
+		icecreamPanel.add(sixth_icecream, "6");	
 		
 		// 왼쪽 아래 - 키보드 패널
-		JPanel wordpanel = new JPanel();
+		wordpanel = new JPanel();
 		wordpanel.setBackground(new Color(255, 255, 255));
-		wordpanel.setBounds(12, 498, 563, 238);
+		wordpanel.setBounds(12, 313, 563, 238);
 		wordpanel.setLayout(new GridLayout(3, 9, 10, 10));
 		contentPane.add(wordpanel);
 		
+		userWordLabel = new JLabel();
+		userWordLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+		userWordLabel.setBounds(12, 253, 563, 50);
+		contentPane.add(userWordLabel);
+		
+		JLabel lblNewLabel_1 = new JLabel("틀린 알파벳");
+		lblNewLabel_1.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
+		lblNewLabel_1.setBounds(12, 231, 90, 15);
+		contentPane.add(lblNewLabel_1);
+		
 		for (int i = 0; i < words.length - 1; ++i) {
-			words[i] = new WordToggleBtn(alphabet[i]);
+			words[i] = new JToggleButton(alphabet[i]);
+			words[i].setBackground(Color.LIGHT_GRAY);
+			words[i].setSize(30, 30);
+			words[i].setFont(new Font("맑은고딕", Font.BOLD, 20));
+			words[i].addActionListener(this);
 			wordpanel.add(words[i]);
 		}
 		
-		JLabel usertextLabel = new JLabel("정답");
-		usertextLabel.setFont(new Font("맑은 고딕", Font.BOLD, 40));
-		usertextLabel.setBounds(17, 432, 99, 48);
-		contentPane.add(usertextLabel);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
 		
-		usertextField = new JTextField();
-		usertextField.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		usertextField.setBounds(124, 434, 260, 48);
-		contentPane.add(usertextField);
-		usertextField.setColumns(10);
+		if (answer.contains(e.getActionCommand())) {			
+			for (int i = 0; i < answer.length(); ++i) {
+				String choice = e.getActionCommand();
+				if (answer.contains(choice)) {
+					int index = answer.indexOf(choice, answer.indexOf(choice) + i);
+					
+					if (index != -1) {						
+						answerChar[index].setText(choice); // 값이 있으면 버튼 값 바꿈
+					}
+				}
+			}
+			
+			notionLabel.setText("조금만 더 힘을내요!");
+			notionLabel.setForeground(Color.GREEN);
+			
+		} else {
+			sb.append(e.getActionCommand());
+			
+			userWordLabel.setText(sb.toString());
+			
+			notionLabel.setText("틀렸습니다!");
+			notionLabel.setForeground(Color.red);
+			
+			chance--; // 기회 -1
+			cards.next(icecreamPanel); // 아이스크림 패널 next
+		}
 		
-		JButton chkButton = new JButton("확인");
-		chkButton.setForeground(new Color(255, 255, 255));
-		chkButton.setBackground(new Color(255, 128, 192));
-		chkButton.setFont(new Font("맑은 고딕", Font.BOLD, 30));
-		chkButton.setBounds(396, 435, 118, 48);
-		contentPane.add(chkButton);
+		if (chance == 0) {
+			Lose lose = new Lose(answer);
+			lose.setVisible(true);
+			setVisible(false); // 기존 창 안보이게 하기
+		} else {
+			chkWord(); // 정답인지 체크
+		}
+	}
+	
+	void chkWord() {
+		StringBuilder sb = new StringBuilder();
 		
-		// 왼쪽 중앙 - 정답 출력되는 패널
-		JLabel notionLabel = new JLabel("영단어를 맞춰보세요!");
-		notionLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		notionLabel.setBounds(23, 155, 234, 35);
-		contentPane.add(notionLabel);
+		for (int i = 0; i < answerChar.length; ++i) {
+			if (answerChar[i] != null) {
+				sb.append(answerChar[i].getText());
+			}
+		}
 		
-		JPanel answerPanel = new JPanel();
-		answerPanel.setBackground(new Color(255, 255, 255));
-		answerPanel.setBounds(23, 200, 545, 200);
-		answerPanel.setLayout(new FlowLayout());
-		contentPane.add(answerPanel);		
-		// 정답 수에 맞춰서 버튼이 출력됨
-		JButton[] answerChar = new JButton[answer.length()];
-		for (int i = 0; i < answer.length(); ++i) {
-			answerChar[i] = new JButton("             ");
-			answerChar[i].setSize(100, 300);
-			answerChar[i].setEnabled(false);
-			answerPanel.add(answerChar[i]);
-		}	
-		
+		if (answer.equals(sb.toString().trim())) {
+			Win win = new Win(answer);
+			win.setVisible(true);	
+		}
 	}
 }
+
