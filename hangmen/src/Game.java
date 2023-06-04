@@ -1,6 +1,5 @@
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.EventQueue;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
@@ -11,11 +10,11 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.border.EmptyBorder;
@@ -36,30 +35,14 @@ public class Game extends JFrame implements ActionListener {
 	
 	private CardLayout cards = new CardLayout();
 	
-	StringBuilder sb = new StringBuilder();
-	
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() {
-			public void run() {
-				try {
-					Game frame = new Game();
-					frame.setVisible(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
+	private StringBuilder sb = new StringBuilder();
 
 	public Game() {
 		// 게임을 새로 시작할 때 마다 새로운 정답이 생성됨
 		AnswerWord word = new AnswerWord();
 		answer = word.getAnswer();
 		
-		System.out.println(answer);
+//		System.out.println(answer);
 		
 		// 기본 디자인 셋팅
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -159,9 +142,9 @@ public class Game extends JFrame implements ActionListener {
 		userWordLabel.setBounds(12, 253, 563, 50);
 		contentPane.add(userWordLabel);
 		
-		JLabel lblNewLabel_1 = new JLabel("틀린 알파벳");
+		JLabel lblNewLabel_1 = new JLabel("사용한 알파벳");
 		lblNewLabel_1.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
-		lblNewLabel_1.setBounds(12, 231, 90, 15);
+		lblNewLabel_1.setBounds(12, 231, 120, 15);
 		contentPane.add(lblNewLabel_1);
 		
 		for (int i = 0; i < words.length - 1; ++i) {
@@ -178,9 +161,16 @@ public class Game extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		if (answer.contains(e.getActionCommand())) {			
+		String choice = e.getActionCommand();
+		
+		if (userWordLabel.getText().contains(choice)) {
+			JOptionPane.showMessageDialog(null, "이미 사용한 알파벳입니다.");
+			return;
+		}
+		
+		if (answer.contains(e.getActionCommand())) { // 정답에 있는 알파벳 입력 시
 			for (int i = 0; i < answer.length(); ++i) {
-				String choice = e.getActionCommand();
+				
 				if (answer.contains(choice)) {
 					int index = answer.indexOf(choice, answer.indexOf(choice) + i);
 					
@@ -188,16 +178,11 @@ public class Game extends JFrame implements ActionListener {
 						answerChar[index].setText(choice); // 값이 있으면 버튼 값 바꿈
 					}
 				}
-			}
-			
+			}			
 			notionLabel.setText("조금만 더 힘을내요!");
 			notionLabel.setForeground(Color.GREEN);
 			
-		} else {
-			sb.append(e.getActionCommand());
-			
-			userWordLabel.setText(sb.toString());
-			
+		} else { // 정답에 없는 알파벳 입력시			
 			notionLabel.setText("틀렸습니다!");
 			notionLabel.setForeground(Color.red);
 			
@@ -205,15 +190,19 @@ public class Game extends JFrame implements ActionListener {
 			cards.next(icecreamPanel); // 아이스크림 패널 next
 		}
 		
-		if (chance == 0) {
+		sb.append(e.getActionCommand());
+		userWordLabel.setText(sb.toString());
+		
+		if (chance == 0) { // 기회 0이면 게임 종료
 			Lose lose = new Lose(answer);
 			lose.setVisible(true);
-			setVisible(false); // 기존 창 안보이게 하기
+			setVisible(false);
 		} else {
-			chkWord(); // 정답인지 체크
+			chkWord(); // 기회가 남아 있을 때는 정답인지 체크
 		}
 	}
 	
+	// 정답 버튼과 정답 비교하여 확인
 	void chkWord() {
 		StringBuilder sb = new StringBuilder();
 		
