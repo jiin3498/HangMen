@@ -215,7 +215,8 @@ public class Game extends JFrame implements ActionListener {
 		
 		if (answer.equals(sb.toString().trim())) {
 			Win win = new Win(answer);
-			win.setVisible(true);	
+			win.setVisible(true);
+			setVisible(false);
 		}
 	}
 }
