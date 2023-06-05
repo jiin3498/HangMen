@@ -137,6 +137,15 @@ public class Game extends JFrame implements ActionListener {
 		wordpanel.setLayout(new GridLayout(3, 9, 10, 10));
 		contentPane.add(wordpanel);
 		
+		for (int i = 0; i < words.length - 1; ++i) {
+			words[i] = new JToggleButton(alphabet[i]);
+			words[i].setBackground(Color.LIGHT_GRAY);
+			words[i].setSize(30, 30);
+			words[i].setFont(new Font("맑은고딕", Font.BOLD, 20));
+			words[i].addActionListener(this);
+			wordpanel.add(words[i]);
+		}
+		
 		userWordLabel = new JLabel();
 		userWordLabel.setFont(new Font("맑은 고딕", Font.PLAIN, 15));
 		userWordLabel.setBounds(12, 253, 563, 50);
@@ -147,15 +156,6 @@ public class Game extends JFrame implements ActionListener {
 		lblNewLabel_1.setBounds(12, 231, 120, 15);
 		contentPane.add(lblNewLabel_1);
 		
-		for (int i = 0; i < words.length - 1; ++i) {
-			words[i] = new JToggleButton(alphabet[i]);
-			words[i].setBackground(Color.LIGHT_GRAY);
-			words[i].setSize(30, 30);
-			words[i].setFont(new Font("맑은고딕", Font.BOLD, 20));
-			words[i].addActionListener(this);
-			wordpanel.add(words[i]);
-		}
-		
 	}
 
 	@Override
@@ -163,9 +163,10 @@ public class Game extends JFrame implements ActionListener {
 		
 		String choice = e.getActionCommand();
 		
-		if (userWordLabel.getText().contains(choice)) {
-			JOptionPane.showMessageDialog(null, "이미 사용한 알파벳입니다.");
-			return;
+		for (int i = 0; i < words.length - 1; ++i) {			
+			if (words[i].getText().equals(choice)) {
+				words[i].setVisible(false);
+			}
 		}
 		
 		if (answer.contains(e.getActionCommand())) { // 정답에 있는 알파벳 입력 시
